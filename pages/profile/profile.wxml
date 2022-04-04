@@ -1,0 +1,56 @@
+<cu-custom bgColor="bg-gradual-blue" isBack="{{true}}">
+        <view slot="backText">返回</view>
+        <view slot="content">个人中心</view>
+</cu-custom>
+<form action="">
+        <view class="bg-white">
+                <view class="cu-form-group margin-top">
+                        <view class="title">姓名</view>
+                        <input type="text" placeholder="{{userDrive.name||'未填写'}}" value="{{userDrive.name||'未填写'}}" bindinput="getNameInput"></input>
+                </view>
+                <radio-group bindchange="getSexInput">
+                        <view class="cu-form-group margin-top">
+                                <view class="title">性别</view>
+                                <radio class="radio" value="男" checked="{{userDrive.sex==='男'}}"></radio>男
+                                <radio class="radio margin-left" value="女" checked="{{userDrive.sex==='女'}}"></radio>女
+                        </view>
+                </radio-group>
+                <view class="cu-form-group">
+                        <view class="title">出生日期</view>
+                        <picker mode="date" value="{{date}}" start="1990-10-01" end="2022-01-25" bindchange="getAgeInput">
+                                <view class="picker">
+                                        {{userDrive.birthday||user.birthday}}
+                                </view>
+                        </picker>
+                </view>
+                <view class="cu-form-group">
+                        <view class="title">手机号码</view>
+                        <input placeholder=" {{userDrive.phone||'未填写'}}" bindinput="getPhoneInput"></input>
+                        <view class="cu-capsule radius">
+                                <view class="cu-tag bg-blue">
+                                        +86
+                                </view>
+                                <view class="cu-tag line-blue">
+                                        中国大陆
+                                </view>
+                        </view>
+                </view>
+                <view class="cu-form-group">
+                        <view class="title">紧急呼救号码</view>
+                        <input placeholder="{{userDrive.sosPhone||'未填写'}}" bindinput="getSosPhoneInput"></input>
+                        <view class="cu-capsule radius">
+                                <view class="cu-tag bg-blue">
+                                        +86
+                                </view>
+                                <view class="cu-tag line-blue">
+                                        中国大陆
+                                </view>
+                        </view>
+                </view>
+        </view>
+        <view class="content padding">
+                <button class="cu-btn block bg-gradual-blue lg" bindtap="postUserMsg">
+                        确 认
+                </button>
+        </view>
+</form>

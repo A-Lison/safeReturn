@@ -1,0 +1,4 @@
+/* pages/relative/relative.wxss */
+.menu-avatar .cu-item .content {
+        left: 60rpx !important;
+}

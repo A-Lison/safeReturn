@@ -1,0 +1,69 @@
+<cu-custom bgColor="bg-gradual-blue">
+        <view slot="content">平安归来</view>
+</cu-custom>
+<!-- 轮播图 -->
+<!-- {{DotStyle?'square-dot':'round-dot'}} -->
+<swiper class="card-swiper square-dot" indicator-dots="true" circular="true" autoplay="true" interval="5000" duration="500" bindchange="cardSwiper" indicator-color="#8799a3" indicator-active-color="#0081ff">
+        <swiper-item wx:for="{{swiperList}}" wx:key="{{id}}" class="{{cardCur==index?'cur':''}}">
+                <view class="swiper-item">
+                        <image src="{{item.url}}" mode="aspectFill" wx:if="{{item.type=='image'}}"></image>
+                        <video src="{{item.url}}" autoplay loop muted show-play-btn="{{false}}" controls="{{false}}" objectFit="cover" wx:if="{{item.type=='video'}}"></video>
+                </view>
+        </swiper-item>
+</swiper>
+<view class="main">
+        <view class="cu-bar bg-white margin-top solid-bottom">
+                <view class="action">
+                        <text class="cuIcon-title text-orange"></text>智能安全驾驶监测系统
+                </view>
+        </view>
+        <scroll-view scroll-x class="bg-white nav">
+                <view class="flex text-center">
+                        <view class="cu-item flex-sub {{index==TabCur?'text-orange cur':''}}" wx:for="{{tabTitle}}" wx:key bindtap="tabSelect" data-id="{{index}}">
+                                {{item}}
+                        </view>
+                </view>
+        </scroll-view>
+        <view class="introduce text" wx:if="{{TabCur===0}}">
+                <text decode="{{true}}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;该小程序用于开发一套智能安全驾驶检测系统，对驾驶员行为进行监控，收集数据进行存 储分析，以便后期对驾驶员驾驶为进行分析，同时在用车时间，对驾驶员一些 常规健康数据进行收集，实时监视分析驾驶员健康指数，时配备移动端，在突 发异常情况时，可以紧急联系亲属，以免悲剧发生。为车主的身体健康和安全驾 驶为都可以提供很好的监测保护。
+                </text>
+                <view class='nav-list margin-top'>
+                        <navigator open-type="navigate" hover-class='none' class="margin nav-li bg-{{item.color}}" wx:for="{{elements}}" wx:key>
+                                <view class="nav-title">{{item.title}}</view>
+                                <view class="nav-name">{{item.name}}</view>
+                                <text class='cuIcon-{{item.icon}}'></text>
+                        </navigator>
+                </view>
+        </view>
+        <view class="wine text" wx:if="{{TabCur===1}}" style="height: (100vh-420rpx);">
+                <text decode="{{true}}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在汽车方向盘安装酒精检测传感器，判别驾驶员 是否存在酒后驾驶，若有自动拨号家属联系人。
+                </text>
+                <view class="img">
+                        <image src="/images/wine-2.jpg" mode="heightFix"></image>
+                </view>
+
+        </view>
+        <view class="pose text" wx:if="{{TabCur===2}}">
+                <text decode="{{true}}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在驾驶员前方增加摄像头，并指向驾驶员 的面部，提供驾驶员实时行为状态，如闭眼、打哈欠、注意力不集中、打电话、 抽烟等，并发出语音警告。
+                </text>
+                <view class="cu-bar bg-white solid-bottom margin-top">
+                        <view class="action">
+                                <text class="cuIcon-title text-cyan "></text>状态列表
+                        </view>
+                </view>
+                <view class="cu-list grid col-{{gridCol}} {{gridBorder?'':'no-border'}}">
+                        <view class="cu-item" wx:for="{{iconList}}" wx:key wx:if="{{index<gridCol*2}}">
+                                <view class="cuIcon-{{item.icon}} text-{{item.color}}">
+                                </view>
+                                <text>{{item.name}}</text>
+                                <text>警告线：{{item.times}}</text>
+                        </view>
+                </view>
+        </view>
+        <view class="about text" wx:if="{{TabCur===3}}">
+                <text style="text-align: center;">---------------------------已经在努力打工了---------------------------</text>
+        </view>
+</view>

@@ -1,0 +1,67 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/function/function",
+    "pages/location/location",
+    "pages/mine/mine",
+    "pages/history/history",
+    "pages/relative/relative",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "玖陆零零",
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "black",
+    "list": [{
+        "text": "首页",
+        "pagePath": "pages/home/home",
+        "iconPath": "images/tabbar/basics.png",
+        "selectedIconPath": "images/tabbar/basics_cur.png"
+      },
+      {
+        "text": "功能",
+        "pagePath": "pages/function/function",
+        "iconPath": "images/tabbar/auto.png",
+        "selectedIconPath": "images/tabbar/auto _cur.png"
+      },
+      {
+        "text": "定位",
+        "pagePath": "pages/location/location",
+        "iconPath": "images/tabbar/local.png",
+        "selectedIconPath": "images/tabbar/local_cur.png"
+      },
+      {
+        "text": "我的",
+        "pagePath": "pages/mine/mine",
+        "iconPath": "images/tabbar/about.png",
+        "selectedIconPath": "images/tabbar/about_cur.png"
+      }
+    ]
+
+  },
+  "usingComponents": {
+    "cu-custom": "/colorui/components/cu-custom"
+  },
+  "sitemapLocation": "sitemap.json",
+  "plugins": {
+    "chooseLocation": {
+      "version": "1.0.9",
+      "provider": "wx76a9a06e5b4e693e"
+    },
+    "routePlan": {
+      "version": "1.0.19",
+      "provider": "wx50b5593e81dd937a"
+    }
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序定位"
+    }
+  },
+  "requiredBackgroundModes": ["audio", "location"]
+}

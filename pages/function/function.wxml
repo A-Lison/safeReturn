@@ -1,0 +1,222 @@
+<cu-custom bgColor="bg-gradual-blue">
+  <view slot="content">平安归来</view>
+</cu-custom>
+<!--pages/function/function.wxml-->
+<view class="funBox">
+  <view class="msg">
+    <view class="cu-card case bg-white margin-bottom">
+      <view class="cu-item shadow">
+        <view class="cu-list menu padding">
+          <view class="cu-item ">
+            <view class="content flex  align-center">
+              <view class="cu-avatar round margin-right xl" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg);"></view>
+              <view class="flex-direction align-start margin-left">
+                <text class="text">驾驶员：{{userDrive.name||'未填写'}}</text>
+                <text class="text">性别：{{userDrive.sex||'未填写'}}</text>
+                <text class="text">电话号码：{{userDrive.phone||'未填写'}}</text>
+                <text class="text">紧急呼救：{{userDrive.sosPhone||'未填写'}}</text>
+              </view>
+
+            </view>
+          </view>
+          <view class="cu-item " wx:if="{{!isDrive}}">
+            <view class="content padding">
+              <button class="cu-btn block bg-gradual-blue lg" bindtap="startDrive" loading="{{loading}}">
+                开始驾驶
+              </button>
+            </view>
+          </view>
+        </view>
+      </view>
+
+    </view>
+  </view>
+  <view class="drive" wx:if="{{isDrive}}">
+    <view class="tiJian">
+      <view class="cu-bar bg-white solid-bottom">
+        <view class='action'>
+          <text class='cuIcon-titles text-blue'></text> 驾驶员体检
+        </view>
+      </view>
+      <view class="cu-card case ">
+        <view class="cu-item shadow">
+          <view class="cu-list menu">
+            <view class="cu-item">
+              <view class="content ">
+                <text class="cuIcon-discoverfill text-orange"></text>
+                <text class="text">体温：{{physicalData.temperature}}</text>
+                <text class="text-grey fr margin-right-10">单位：℃</text>
+              </view>
+            </view>
+            <view class="cu-item">
+              <view class="content ">
+                <text class="cuIcon-discoverfill text-orange"></text>
+                <text class="text">心跳：{{physicalData.heart}}</text>
+                <text class="text-grey fr margin-right-10">单位：次/分钟</text>
+              </view>
+            </view>
+            <view class="cu-item">
+              <view class="content ">
+                <text class="cuIcon-discoverfill text-orange"></text>
+                <text class="text">血压：{{physicalData.bloodPressure}}</text>
+                <text class="text-grey fr margin-right-10">单位：mmHg</text>
+              </view>
+            </view>
+            <view class="cu-item">
+              <view class="content ">
+                <text class="cuIcon-discoverfill text-orange"></text>
+                <text class="text">血脂：{{physicalData.bloodFat}}</text>
+                <text class="text-grey fr margin-right-10">单位：mmol/L</text>
+              </view>
+            </view>
+
+          </view>
+        </view>
+
+      </view>
+    </view>
+    <view class="jiuJia">
+      <view class="cu-bar bg-white solid-bottom">
+        <view class='action'>
+          <text class='cuIcon-titles text-blue '></text> 酒精检测
+        </view>
+      </view>
+      <view class="cu-card case ">
+        <view class="cu-item shadow">
+          <view class="cu-list menu ">
+            <view class=" ">
+              <view class="cu-bar bg-white solid-bottom margin-top">
+                <view class="action">
+                  <text class="cuIcon-title text-blue"></text>酒精度：{{alcohol}}%
+                </view>
+              </view>
+              <view class="padding bg-white">
+                <view class="cu-progress radius striped active">
+                  <view class="bg-olive" style="width:{{alcohol>30?'30%':alcohol+'%'}};">{{alcohol>30?'30%':alcohol+'%'}}</view>
+                  <view class="bg-orange" style="width:{{(alcohol-30)>45?'45%':(alcohol-30)+'%'}};">{{(alcohol-30)>45?'45%':(alcohol-30)+'%'}}</view>
+                  <view class="bg-red" style="width:{{(alcohol-75)>0?(alcohol-75)+'%':' '}};">{{(alcohol-75)>0?(alcohol-75)+'%':' '}}</view>
+                </view>
+              </view>
+
+            </view>
+            <view class="cu-item align-center">
+              <view class="content flex-sub text-center ">
+                <view class="solids-bottom padding-xs flex align-center">
+                  <view class="flex-sub text-center">
+                    <view class="solid-bottom text-lg padding">
+                      驾驶状态：
+                      <text wx:if="{{isWine}}" class="text-green text-bold">正常驾驶</text>
+                      <text wx:if="{{!sWine}}" class="text-bold text-red">酒后驾驶</text>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="pose">
+      <view class="cu-bar bg-white solid-bottom">
+        <view class='action'>
+          <text class='cuIcon-titles text-blue '></text> 状态检测
+        </view>
+      </view>
+      <view class="cu-card case ">
+        <view class="cu-item shadow">
+          <view class="cu-list menu">
+            <view class="cu-item">
+              <view class="content padding">
+                <text class="cuIcon-discoverfill text-orange"></text>
+                <text class="text">闭眼：{{poseData.biYan.times}}</text>
+                <text class="text-grey fr margin-right-10">次</text>
+                <view class="bg-white padding">
+                  <view class="grid col-4 grid-square">
+                    <view class="bg-img" wx:for="{{4}}" wx:key style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big1000{{index+1}}.jpg);"></view>
+                  </view>
+                </view>
+              </view>
+
+            </view>
+            <view class="cu-item">
+              <view class="content ">
+                <text class="cuIcon-discoverfill text-orange"></text>
+                <text class="text">打哈欠：{{ poseData.daHaQian.times}}</text>
+                <text class="text-grey fr margin-right-10">次</text>
+
+              </view>
+            </view>
+            <view class="cu-item">
+              <view class="content ">
+                <text class="cuIcon-discoverfill text-orange"></text>
+                <text class="text">玩手机：{{ poseData.playPhone.times}}</text>
+                <text class="text-grey fr margin-right-10">次</text>
+
+              </view>
+            </view>
+            <view class="cu-item">
+              <view class="content ">
+                <text class="cuIcon-discoverfill text-orange"></text>
+                <text class="text">抽烟：{{ poseData.chouYan.times}}</text>
+                <text class="text-grey fr margin-right-10">次</text>
+              </view>
+            </view>
+            <view class="cu-item">
+              <view class="content ">
+                <text class="cuIcon-discoverfill text-orange"></text>
+                <text class="text">打电话：{{poseData.call.times}}</text>
+                <text class="text-grey fr margin-right-10">次</text>
+              </view>
+            </view>
+            <view class="cu-item">
+              <view class="content ">
+                <text class="cuIcon-discoverfill text-orange"></text>
+                <text class="text">注意力不集中：{{poseData.zhuYiLi.times}}</text>
+                <text class="text-grey fr margin-right-10">次</text>
+              </view>
+            </view>
+            <view class="cu-item align-center">
+              <view class="content flex-sub text-center ">
+                <view class="solids-bottom padding-xs flex align-center">
+                  <view class="flex-sub text-center">
+                    <view class="solid-bottom text-lg padding">
+                      驾驶状态：
+                      <text wx:if="{{!poseData.isTired}}" class="text-green text-bold">正常驾驶</text>
+                      <text wx:if="{{poseData.isTired}}" class="text-bold text-red">疲劳驾驶</text>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+
+      </view>
+    </view>
+    <view class="sos">
+      <view class="cu-bar bg-white solid-bottom">
+        <view class='action'>
+          <text class='cuIcon-titles text-blue '></text> 紧急情况
+        </view>
+      </view>
+      <view class="cu-card case ">
+        <view class="cu-item shadow">
+          <view class="cu-list menu">
+            <view class="cu-item">
+              <view class="content padding">
+                <button class="cu-btn block line-red lg">
+                  紧急拨号</button>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="content padding">
+      <button class="cu-btn block bg-gradual-blue lg" bindtap="endDrive" loading="{{loading}}">
+        结束驾驶
+      </button>
+    </view>
+  </view>
+
+</view>
