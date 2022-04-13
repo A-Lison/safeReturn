@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-SafedrivingApplication<safedriving>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.fc9600.safedriving.SafedrivingApplication",
+            "projectName": "safedriving",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

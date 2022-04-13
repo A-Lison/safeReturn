@@ -1,8 +1,0 @@
-.flex-direction {
-        display: flex;
-        flex-direction: column;
-}
-
-.flex-direction text {
-        margin-top: 5px;
-}

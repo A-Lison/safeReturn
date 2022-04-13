@@ -1,0 +1,34 @@
+spring:
+    datasource:
+        url: jdbc:mysql://localhost:3306/fc9600?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+        username: root
+        password: 283155
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        
+    servlet:
+        multipart:
+           enabled: true
+           max-file-size: 1024MB
+           max-request-size: 1024MB
+    thymeleaf: 
+        cache: false
+        mode: LEGACYHTML5
+        check-template: true
+        servlet:
+            content-type: text/html
+        enabled: true
+        encoding: UTF-8
+        prefix: classpath:/static/
+        suffix: .html
+    web:
+        resources:
+            #服务器路径
+            static-locations: file:/www/wwwroot/safedriving/files/
+            #本地测试路径
+            # static-locations: file:/F:/picetest/
+
+server:
+    port: 8081
+
+
+
