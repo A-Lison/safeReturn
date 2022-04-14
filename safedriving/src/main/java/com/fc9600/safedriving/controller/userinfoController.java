@@ -3,13 +3,13 @@ package com.fc9600.safedriving.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.fc9600.safedriving.model.Person;
 import com.fc9600.safedriving.model.UserInfo;
 import com.fc9600.safedriving.model.result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -99,10 +99,28 @@ public class userinfoController {
     // System.out.println("查询用户失败");
     // return null;
     // }
+    public result search(String id) {
+        String sql = "select * from userinfo where openid = '" + id + "';";
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
+        result res = new result();
+        if (list.size() != 0) {
+            Map<String, Object> map = list.get(0);
+            System.out.println("查询用户成功");
+            res.code = 0;
+            res.msg = "查询成功";
+            res.data = map;
+        } else {
+            System.out.println("查询用户失败");
+            res.code = -1;
+            res.msg = "未查询到该用户";
+            res.data = null;
+        }
+        return res;
+    }
 
     // 查询用户
-    @GetMapping("/search/{id}")
-    public result search(@PathVariable("id") String id) {
+    @PostMapping("/search")
+    public result searchF(@RequestBody String id) {
         String sql = "select * from userinfo where id = '" + id + "';";
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
         result res = new result();
@@ -122,13 +140,13 @@ public class userinfoController {
     }
 
     // 登录
-    @GetMapping("/login/{id}/{num}")
+    @PostMapping("/login")
     public result login(
-            @PathVariable("id") String id, // 返回的true表示用户存在，返回的false表示用户不存在，并创建新的用户
-            @PathVariable("num") String num) {
+            @RequestBody Person per) {
+        String num = per.num;
         // 判断是否为已注册用户
         this.id = new String(id);
-        result userinfo = search(id);
+        result userinfo = search(per.id);
         if (userinfo.data != null) {
             System.out.println("用户存在");
             userinfo.msg = "登陆成功";
@@ -139,30 +157,37 @@ public class userinfoController {
         System.out.println("用户不存在创建新的用户");
         int age = 0;
         int sex = 0;
-        String name = "新用户" + id;
-        System.out.println(age + " " + sex + " " + name);
-
-        String sql = "insert into userinfo(id,name,age,sex,phone)values ('" + id + "','" + name + "'," + age + "," + sex
-                + ",'" + num + "');";
+        String sql = "select count(*) from userinfo ;";
+        List<Map<String, Object>> realId = jdbcTemplate.queryForList(sql);
+        String RId = realId.get(0).get("count(*)").toString();
+        System.out.println(RId);
+        String name = "新用户" + RId;
+        String id = sql = "insert into userinfo(id,name,age,sex,phone,openid)values ('"
+                + RId + "','"
+                + name + "',"
+                + age + ","
+                + sex + ",'"
+                + num + "','"
+                + per.id + "');";
         System.out.println(sql);
         jdbcTemplate.update(sql);
         System.out.println("添加新用户信息");
         // 创建该用户的relation表（关系，号码）
-        sql = "create table relation" + id + "(relation varchar(32) primary key,phone varchar(32));";
+        sql = "create table relation" + RId + "(relation varchar(32) primary key,phone varchar(32));";
         jdbcTemplate.update(sql);
         System.out.println("创建用户亲属表");
         // 创建该用户的driver表（批次，时间，违规类型，图片地址）
-        sql = "create table driver" + id
+        sql = "create table driver" + RId
                 + "(num varchar(32),time datetime,type int,img varchar(225),longitude decimal(20,10),latitude decimal(20,10));";
         jdbcTemplate.update(sql);
         System.out.println("创建用户驾驶图表");
         // 创建该用户的health表（批次，时间，心率，血压，酒精，体温。。。）
-        sql = "create table health" + id
+        sql = "create table health" + RId
                 + "(num varchar(32),time datetime,heart int,press double,alcohol double,heat double,longitude decimal(20,10),latitude decimal(20,10));";
         jdbcTemplate.update(sql);
         System.out.println("创建用户健康表");
 
-        userinfo = search(id);
+        userinfo = search(per.id);
         userinfo.msg = "用户创建成功";
         userinfo.code = 1;
         return userinfo;

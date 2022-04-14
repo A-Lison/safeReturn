@@ -8,6 +8,10 @@ id：用户的唯一区分（计划用小程序可以直接获取的openid）
 
 时间格式：“YYYY-MM-DD HH:MM:SS”             例如：“2017-03-02 15:22:22”
 
+除了上传图片的接口使用的是form-data格式上传，其余都为json格式
+
+因为openid的字符存在非法字符，所以数据库在执行相关信息的操作的时候使用的id为userinfo表中openid对应的id
+
 #### 用户信息
 
 ###### 获取用户信息
@@ -16,16 +20,19 @@ id：用户的唯一区分（计划用小程序可以直接获取的openid）
 
 **请求url：**
 
-- `/api/userInfo/search/{id}`
+- `/api/userInfo/search`
 
 **请求方式：**
 
-- get
+- post
 
 **参数：**
 
 ~~~js
-id:"<string>"
+{
+    //openid号
+	openid:"<string>"
+}
 ~~~
 
 **返回值：**
@@ -46,6 +53,8 @@ id:"<string>"
     	"sex":<int>,
     	//电话
     	"phone":"string"
+        //openid
+        "openid":"<string>"
 	},
 	"code": 0,
 	"msg": "查询成功"
@@ -70,19 +79,21 @@ id:"<string>"
 
 **请求url：**
 
-- `/api/userInfo/login/{id}/{num}`
+- `/api/userInfo/login
 
 **请求方式：**
 
-- get
+- post
 
 **参数：**
 
 ~~~js
-//id号
-id:"<string>"
-//电话
-num:"<string>"
+{
+    //id号
+	openid:"<string>"
+	//电话
+	num:"<string>"
+}
 ~~~
 
 **返回值：**
@@ -94,7 +105,7 @@ num:"<string>"
 	"data": {
     	//id号
     	"id":"<string>",
-   	 	//名字
+    	//名字
     	"name":"<string>",
     	//年龄
     	"age":<int>,
@@ -102,9 +113,11 @@ num:"<string>"
     	"sex":<int>,
     	//电话
     	"phone":"string"
+        //openid
+        "openid":"<string>"
 	},
 	"code": 0,
-	"msg": "登陆成功"
+	"msg": "查询成功"
 }
 ~~~
 
@@ -115,7 +128,7 @@ num:"<string>"
 	"data": {
     	//id号
     	"id":"<string>",
-   	 	//名字
+    	//名字
     	"name":"<string>",
     	//年龄
     	"age":<int>,
@@ -123,8 +136,10 @@ num:"<string>"
     	"sex":<int>,
     	//电话
     	"phone":"string"
+        //openid
+        "openid":"<string>"
 	},
-	"code": 1,
+	"code": 0,
 	"msg": "用户创建成功"
 }
 ~~~
@@ -619,7 +634,7 @@ post
 
 **参数**
 
-~~~js
+~~~json
 {
     //文件（这里是图片）
     "file":"<MultipartFile>"，
@@ -715,7 +730,7 @@ n:<int>	//时间段包括的天数
 
 
 
-###### 按照年月日查找相关批次的健康数据
+###### 按照年月日查找相关批次的危险记录
 
 得到要搜索的年月日的值，可以为0（为零表示在这个参数上不做约束）
 
@@ -761,7 +776,7 @@ post
 
 
 
-###### 查询具体某一批次的所有健康数据
+###### 查询具体某一批次的所有危险记录
 
 上文提到的查询api将相关的批次列出来后，如果用户点击相应的批次，在调用这个api可以将具体的数据返回小程序
 
@@ -824,7 +839,7 @@ num:"<string>"//num为用户点击的相应批次的num
 
 ###### excel文件下载链接
 
-将时间在num1和num2之间的车次导出为一张excel表格，表格下每一张表的表示一次车次的记录
+将时间在num1和num2之间的车次导出为一张excel表格，表格下每一张表的表示一次车次的记录，每一张表分为两部分，上面是健康数据异常次数的统计，下方是该车次所有健康记录，有异常数据的单元格会用黄色标记
 
 **请求url：**
 
