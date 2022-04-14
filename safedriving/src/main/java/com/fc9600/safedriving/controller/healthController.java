@@ -25,8 +25,8 @@ public class healthController {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-
-    String alco = "";
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat sheetNamedf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 
     // 传输数据
     // insert into formName( ) values('2017-03-02 15:22:22');
@@ -37,11 +37,10 @@ public class healthController {
             String formName = "health" + healthinfo.id;
             System.out.println(formName);
             String sql = "insert into " + formName +
-                    "(num,time,heart,press,alcohol,heat,longitude,latitude)values ('new','"
+                    "(num,time,heart,press,heat,longitude,latitude)values ('new','"
                     + healthinfo.data.get(i).time + "',"
                     + healthinfo.data.get(i).heart + ","
                     + healthinfo.data.get(i).press + ","
-                    + healthinfo.data.get(i).alcohol + ","
                     + healthinfo.data.get(i).heat + ","
                     + healthinfo.data.get(i).longitude + ","
                     + healthinfo.data.get(i).latitude
@@ -59,6 +58,9 @@ public class healthController {
             String sql = "update " + formName + " set num='" + en + "' where num='new';";
             jdbcTemplate.update(sql);
             formName = "driver" + healthinfo.id;
+            sql = "update " + formName + " set num='" + en + "' where num='new';";
+            jdbcTemplate.update(sql);
+            formName = "alcohol" + healthinfo.id;
             sql = "update " + formName + " set num='" + en + "' where num='new';";
             jdbcTemplate.update(sql);
             res.msg = "数据传输结束";
@@ -179,14 +181,23 @@ public class healthController {
         return res;
     }
 
-    @GetMapping("/sendAlco/{mes}")
-    public boolean sendAlco(@PathVariable("mes") String mes) {
-        this.alco = mes;
-        return true;
-    }
-
-    @GetMapping("/getAlco")
-    public String getAlco() {
-        return this.alco;
+    // 查询指定时间段的所有车次
+    @GetMapping("/searchFT/{id}/{num1}/{num2}")
+    public result excel(@PathVariable("id") String id,
+            @PathVariable("num1") String num1,
+            @PathVariable("num2") String num2) throws java.text.ParseException {
+        result res = new result();
+        Date date = df.parse(num1);
+        String start = sheetNamedf.format(date);
+        date = df.parse(num2);
+        String end = sheetNamedf.format(date);
+        String formName = "health" + id;
+        String sql = "select num from (SELECT * FROM " + formName + " WHERE num BETWEEN '" + start +
+                ".000' AND '" + end + ".999')A group by num;";
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
+        res.data = list;
+        res.code = list.size();
+        res.msg = "该时间段所有车次的健康记录";
+        return res;
     }
 }

@@ -4,6 +4,6 @@ public class UserInfo {
     public String id;
     public String name;
     public String age;
-    public int sex;
+    public String sex;
     public String phone;
 }

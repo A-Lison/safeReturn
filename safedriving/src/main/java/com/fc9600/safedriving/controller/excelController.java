@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 class excelController {
     @Autowired
     JdbcTemplate jdbcTemplate;
+
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     SimpleDateFormat sheetNamedf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
     HSSFWorkbook workbook;
@@ -65,7 +66,7 @@ class excelController {
         Hstyle.setAlignment(HorizontalAlignment.CENTER);
 
         int rowNum = 5;
-        String[] headers = { "时间", "心跳", "血压", "酒精", "体温" };
+        String[] headers = { "时间", "心跳", "血压", "体温" };
         HSSFRow row = sheet.createRow(4);
         for (int i = 0; i < headers.length; i++) {
             HSSFCell cell = row.createCell(i);
@@ -73,7 +74,7 @@ class excelController {
             cell.setCellValue(text);
             cell.setCellStyle(style);
         }
-        int cnt[] = { 0, 0, 0, 0 };
+        int cnt[] = { 0, 0, 0 };
         int size = list.size();
         for (int i = 0; i < size; i++) {
 
@@ -81,37 +82,31 @@ class excelController {
 
             int heart = Integer.parseInt(list.get(i).get("heart") + "");
             double press = Double.parseDouble(list.get(i).get("press") + "");
-            double alcohol = Double.parseDouble(list.get(i).get("alcohol") + "");
             double heat = Double.parseDouble(list.get(i).get("heat") + "");
             row1.createCell(0).setCellValue(list.get(i).get("time") + "");
             row1.createCell(1).setCellValue(heart + "");
             row1.createCell(2).setCellValue(press + "");
-            row1.createCell(3).setCellValue(alcohol + "");
-            row1.createCell(4).setCellValue(heat + "");
+            row1.createCell(3).setCellValue(heat + "");
             if (rowNum % 2 == 0) {
-                for (int j = 0; j < 5; j++) {
+                for (int j = 0; j < 4; j++) {
                     row1.getCell(j).setCellStyle(style1);
                 }
             } else {
-                for (int j = 0; j < 5; j++) {
+                for (int j = 0; j < 4; j++) {
                     row1.getCell(j).setCellStyle(style2);
                 }
             }
-            if (heart < 40 || heart > 120) {
+            if (heart < 60 || heart > 100) {
                 cnt[0]++;
                 row1.getCell(1).setCellStyle(Hstyle);
             }
-            if (press < 40 || press > 120) {
+            if (press < 90 || press > 140) {
                 cnt[1]++;
                 row1.getCell(2).setCellStyle(Hstyle);
             }
-            if (alcohol < 40 || alcohol > 120) {
+            if (heat < 36 || heat > 37) {
                 cnt[2]++;
                 row1.getCell(3).setCellStyle(Hstyle);
-            }
-            if (heat < 40 || heat > 120) {
-                cnt[3]++;
-                row1.getCell(4).setCellStyle(Hstyle);
             }
             rowNum++;
 
@@ -141,7 +136,7 @@ class excelController {
         // int cntAct[] = { 0, 0, 0, 0 };
         // row.createCell(size + 2);
         // 合并第三行
-        CellRangeAddress region = new CellRangeAddress(2, 3, 0, 4);
+        CellRangeAddress region = new CellRangeAddress(2, 3, 0, 3);
         sheet.addMergedRegion(region);
         // t = sheet.createRow(3).createCell(0);
         // t.setCellValue("详细统计列表");

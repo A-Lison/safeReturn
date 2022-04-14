@@ -109,6 +109,7 @@ public class userinfoController {
             res.code = 0;
             res.msg = "查询成功";
             res.data = map;
+            this.id = map.get("id").toString();
         } else {
             System.out.println("查询用户失败");
             res.code = -1;
@@ -132,51 +133,55 @@ public class userinfoController {
         String num = per.num;
         System.out.println(per);
         // 判断是否为已注册用户
-        this.id = new String(id);
         result userinfo = search(per.openid);
         if (userinfo.data != null) {
             System.out.println("用户存在");
             userinfo.msg = "登陆成功";
-            return userinfo;
+        } else {
+            // 插入新的用户信息
+            this.id = new String(id);
+            System.out.println("用户不存在创建新的用户");
+            String age = "空";
+            String sex = "空";
+            String sql = "select count(*) from userinfo ;";
+            List<Map<String, Object>> realId = jdbcTemplate.queryForList(sql);
+            String RId = realId.get(0).get("count(*)").toString();
+            System.out.println(RId);
+            String name = "新用户" + RId;
+            sql = "insert into userinfo(id,name,age,sex,phone,openid)values ('"
+                    + RId + "','"
+                    + name + "','"
+                    + age + "','"
+                    + sex + "','"
+                    + num + "','"
+                    + per.openid + "');";
+            System.out.println(sql);
+            jdbcTemplate.update(sql);
+            System.out.println("添加新用户信息");
+            // 创建该用户的relation表（关系，号码）
+            sql = "create table relation" + RId + "(relation varchar(32) primary key,phone varchar(32));";
+            jdbcTemplate.update(sql);
+            System.out.println("创建用户亲属表");
+            // 创建该用户的driver表（批次，时间，违规类型，图片地址）
+            sql = "create table driver" + RId
+                    + "(num varchar(32),time datetime,type int,img varchar(225),longitude decimal(20,10),latitude decimal(20,10));";
+            jdbcTemplate.update(sql);
+            System.out.println("创建用户驾驶图表");
+            // 创建该用户的health表（批次，时间，心率，血压，体温。。。）
+            sql = "create table health" + RId
+                    + "(num varchar(32),time datetime,heart int,press double,heat double,longitude decimal(20,10),latitude decimal(20,10));";
+            jdbcTemplate.update(sql);
+            System.out.println("创建用户健康表");
+            // 创建酒精表
+            sql = "create table alcohol" + RId
+                    + "(num varchar(32),time datetime,alcohol decimal(10,5));";
+            jdbcTemplate.update(sql);
+            System.out.println("创建用户酒精值表");
+
+            userinfo = search(per.openid);
+            userinfo.msg = "用户创建成功";
+            userinfo.code = 1;
         }
-
-        // 插入新的用户信息
-        System.out.println("用户不存在创建新的用户");
-        int age = 0;
-        int sex = 0;
-        String sql = "select count(*) from userinfo ;";
-        List<Map<String, Object>> realId = jdbcTemplate.queryForList(sql);
-        String RId = realId.get(0).get("count(*)").toString();
-        System.out.println(RId);
-        String name = "新用户" + RId;
-        sql = "insert into userinfo(id,name,age,sex,phone,openid)values ('"
-                + RId + "','"
-                + name + "',"
-                + age + ","
-                + sex + ",'"
-                + num + "','"
-                + per.openid + "');";
-        System.out.println(sql);
-        jdbcTemplate.update(sql);
-        System.out.println("添加新用户信息");
-        // 创建该用户的relation表（关系，号码）
-        sql = "create table relation" + RId + "(relation varchar(32) primary key,phone varchar(32));";
-        jdbcTemplate.update(sql);
-        System.out.println("创建用户亲属表");
-        // 创建该用户的driver表（批次，时间，违规类型，图片地址）
-        sql = "create table driver" + RId
-                + "(num varchar(32),time datetime,type int,img varchar(225),longitude decimal(20,10),latitude decimal(20,10));";
-        jdbcTemplate.update(sql);
-        System.out.println("创建用户驾驶图表");
-        // 创建该用户的health表（批次，时间，心率，血压，酒精，体温。。。）
-        sql = "create table health" + RId
-                + "(num varchar(32),time datetime,heart int,press double,alcohol double,heat double,longitude decimal(20,10),latitude decimal(20,10));";
-        jdbcTemplate.update(sql);
-        System.out.println("创建用户健康表");
-
-        userinfo = search(per.openid);
-        userinfo.msg = "用户创建成功";
-        userinfo.code = 1;
         return userinfo;
     }
 
@@ -198,12 +203,13 @@ public class userinfoController {
     @PostMapping(path = "/update")
     public boolean updateuserinfo(@RequestBody UserInfo userinfo) {
         System.out.println("更新用户信息");
-        String sql = "update userinfo set name ='" + userinfo.name + "',age='" + userinfo.age + "',sex=" + userinfo.sex
-                + ",phone='" + userinfo.phone + "' where id='" + userinfo.id + "';";
+        String sql = "update userinfo set name ='" + userinfo.name + "',age='" + userinfo.age + "',sex='" + userinfo.sex
+                + "',phone='" + userinfo.phone + "' where id='" + userinfo.id + "';";
         jdbcTemplate.update(sql);
         return true;
     }
 
+    // 返回当前最后登录用户的id
     @GetMapping(path = "/getId")
     public result getId() {
         result res = new result();

@@ -1,16 +1,16 @@
 #### 一些说明
 
-API的notion在线文档：https://www.notion.so/fc9600-safedriving-API-e4842ad3e06f4fa7a2e24ff7a42f7c3c
+1. API的notion在线文档：https://www.notion.so/fc9600-safedriving-API-e4842ad3e06f4fa7a2e24ff7a42f7c3c
 
-API:http://119.91.89.21:8081
+2. API:https://www.xqstudy.top
 
-id：用户的唯一区分（计划用小程序可以直接获取的openid）
+3. id：用户的唯一区分（计划用小程序可以直接获取的openid）
 
-时间格式：“YYYY-MM-DD HH:MM:SS”             例如：“2017-03-02 15:22:22”
+4. 时间格式：“YYYY-MM-DD HH:MM:SS”             例如：“2017-03-02 15:22:22”
 
-除了上传图片的接口使用的是form-data格式上传，其余都为json格式
+5. 除了上传图片的接口使用的是form-data格式上传，其余都为json格式
 
-因为openid的字符存在非法字符，所以数据库在执行相关信息的操作的时候使用的id为userinfo表中openid对应的id
+6. 因为openid的字符存在非法字符，所以数据库在执行相关信息的操作的时候使用的id为userinfo表中openid对应的id
 
 #### 用户信息
 
@@ -31,7 +31,7 @@ id：用户的唯一区分（计划用小程序可以直接获取的openid）
 ~~~js
 {
     //openid号
-	openid:"<string>"
+	"openid":"<string>"
 }
 ~~~
 
@@ -48,9 +48,9 @@ id：用户的唯一区分（计划用小程序可以直接获取的openid）
     	//名字
     	"name":"<string>",
     	//年龄
-    	"age":<int>,
+    	"age":"<string>",
     	//性别
-    	"sex":<int>,
+    	"sex":"<string>",
     	//电话
     	"phone":"string"
         //openid
@@ -90,9 +90,9 @@ id：用户的唯一区分（计划用小程序可以直接获取的openid）
 ~~~js
 {
     //id号
-	openid:"<string>"
+	"openid":"<string>"
 	//电话
-	num:"<string>"
+	"num":"<string>"
 }
 ~~~
 
@@ -108,9 +108,9 @@ id：用户的唯一区分（计划用小程序可以直接获取的openid）
     	//名字
     	"name":"<string>",
     	//年龄
-    	"age":<int>,
+    	"age":"<string>",
     	//性别
-    	"sex":<int>,
+    	"sex":"<string>",
     	//电话
     	"phone":"string"
         //openid
@@ -131,9 +131,9 @@ id：用户的唯一区分（计划用小程序可以直接获取的openid）
     	//名字
     	"name":"<string>",
     	//年龄
-    	"age":<int>,
+    	"age":"<string>",
     	//性别
-    	"sex":<int>,
+    	"sex":"<string>",
     	//电话
     	"phone":"string"
         //openid
@@ -167,9 +167,9 @@ id：用户的唯一区分（计划用小程序可以直接获取的openid）
     //年龄
     "age":"<string>",
     //性别
-    "sex":<int>,
+    "sex":"<string>",
     //电话
-    "phone":"string"
+    "phone":"<string>"
 }
 ~~~
 
@@ -179,6 +179,32 @@ id：用户的唯一区分（计划用小程序可以直接获取的openid）
 
 ~~~js
 true
+~~~
+
+###### 获取用户端的相应id
+
+**请求url:**
+
+- `api/userInfo/getId`
+
+**请求方式**
+
+get
+
+**参数**
+
+~~~json
+//暂时无
+~~~
+
+**返回值**
+
+~~~json
+{
+	"data":"<string>"//当前使用的小程序的id
+	"code": 0,
+	"msg": "登陆成功"
+}
 ~~~
 
 #### **亲属信息**
@@ -212,7 +238,7 @@ true//添加成功
 ~~~
 
 ~~~js
-false//添加失败,重名
+false//添加失败,名字/电话 重名
 ~~~
 
 
@@ -285,9 +311,9 @@ get
 
 未绑定亲属关系
 
-~~~
+~~~json
 {
-	"data: [],
+	"data": [],
 	"code": -1,
 	"msg": "还没有绑定亲属"
 }
@@ -354,8 +380,6 @@ post
 		"heart":<int>,
 		//血压
         "press":<double>,
-		//酒精
-        "alcohol":<double>,
 		//体温
         "heat":<double>,
         //时间戳
@@ -369,7 +393,6 @@ post
 		{
 		"heart":<int>,
 		"press":<double>,
-		"alcohol":<double>,
 		"heat":<double>,
 		"time":"<string>",
         "lnogitude":<double>,
@@ -594,7 +617,6 @@ num:"<string>"//num为用户点击的相应批次的num
 			"time": "<string>",	//时间
 			"heart": <int>,	//心跳
 			"press": <double>,	//血压
-			"alcohol": <double>,	//酒精
 			"heat": <double>	//体温
             "lnogitude":<double>,	//经度
         	"latitude":<double>	//纬度
@@ -605,7 +627,6 @@ num:"<string>"//num为用户点击的相应批次的num
 			"time": "<string>",	//时间
 			"heart": <int>,	//心跳
 			"press": <double>,	//血压
-			"alcohol": <double>,	//酒精
 			"heat": <double>	//体温
         	"lnogitude":<double>,	//经度
         	"latitude":<double>	//纬度
@@ -616,9 +637,45 @@ num:"<string>"//num为用户点击的相应批次的num
 }
 ~~~
 
+###### 查询指定时间段所有车次的健康记录
 
+上文提到的查询api将相关的批次列出来后，如果用户点击相应的批次，在调用这个api可以将具体的数据返回小程序
 
-#### 危险行为
+**请求url：**
+
+- `api/health/list/{id}/{num1}/{num2}`
+
+**请求方式**
+
+get
+
+**参数**
+
+~~~js
+id:"<string>"
+num1:"<string>"//num1为最早时间
+num1:"<string>"//num2为最晚时间
+~~~
+
+**返回值**
+
+~~~js
+{
+	"data": [
+        //num的格式例如"2015-03-02 18:22:22"，默认以最后一次记录标明每一组数据
+		{
+			"num": "<string>"
+		},
+		{
+			"num": "<string>"
+		}
+	],
+	"code": <int>,//批次的总数
+	"msg": "该时间段所有车次的健康记录"
+}
+~~~
+
+#### 图片操作
 
 将文件上传到服务器，并将可以直接通过url访问的地址存入数据库，相关的请求图片的api会将对应的url返回，可以直接使用
 
@@ -653,197 +710,13 @@ post
 true
 ~~~
 
+#### 酒精超标
 
-
-###### 查询所有批次的危险记录
-
-**请求url:**
-
-- `api/pic/searchAll/{id}`
-
-**请求方式**
-
-get
-
-**参数**
-
-~~~js
-id:"<string>"
-~~~
-
-**返回值**
-
-~~~js
-{
-	"data": [
-        //num的格式例如"2015-03-02 18:22:22"，默认以最后一次记录标明每一组数据
-		{
-			"num": "<string>"
-		},
-		{
-			"num": "<string>"
-		}
-	],
-	"code": <int>,//批次的总数
-	"msg": "所有的危险记录"
-}
-~~~
-
-
-
-###### 查询近n天所有批次的危险记录
-
-如果需要查询近一个月或者进一个星期等时间段的批次，设置n的值即可
-
-**请求url:**
-
-- `api/pic/searchN/{id}/{n}`
-
-**请求方式**
-
-get
-
-**参数**
-
-~~~js
-id:"<string>"
-n:<int>	//时间段包括的天数
-~~~
-
-**返回值**
-
-~~~js
-{
-	"data": [
-        //num的格式例如"2015-03-02 18:22:22"，默认以最后一次记录标明每一组数据
-		{
-			"num": "<string>"
-		},
-		{
-			"num": "<string>"
-		}
-	],
-	"code": <int>,//批次的总数
-	"msg": "近n天的危险记录"
-}
-~~~
-
-
-
-###### 按照年月日查找相关批次的危险记录
-
-得到要搜索的年月日的值，可以为0（为零表示在这个参数上不做约束）
-
-**请求url:**
-
-- `api/pic/search`
-
-**请求方式**
-
-post
-
-**参数**
-
-~~~js
-{
-	id:"<string>",
-    //年
-	year:<int>,
-	//月
-    month:<int>,
-	//日
-    day:<int>
-}
-~~~
-
-**返回值**
-
-~~~js
-{
-	"data": [
-        //num的格式例如"2015-03-02 18:22:22"，默认以最后一次记录标明每一组数据
-		{
-			"num": "<string>"
-		},
-		{
-			"num": "<string>"
-		}
-	],
-	"code": <int>,//批次的总数
-	"msg": "搜索到的危险记录"
-}
-~~~
-
-
-
-###### 查询具体某一批次的所有危险记录
-
-上文提到的查询api将相关的批次列出来后，如果用户点击相应的批次，在调用这个api可以将具体的数据返回小程序
+###### 酒精参数中转——存入
 
 **请求url：**
 
-- `api/pic/list/{id}/{num}`
-
-**请求方式**
-
-get
-
-**参数**
-
-~~~js
-id:"<string>"
-num:"<string>"//num为用户点击的相应批次的num
-~~~
-
-**返回值**
-
-~~~json
-{
-	"data": [
-		{
-            //批次
-			"num": "<string>",
-            //时间
-			"time": "<string>",
-			//危险类型
-            "type": <int>,
-			//图片的url
-            "img": "<string>"
-            //经度
-           	"lnogitude":<double>,	
-        	//纬度	
-        	"latitude":<double>	
-		},
-		...,
-		{
-			//批次
-			"num": "<string>",
-            //时间
-			"time": "<string>",
-			//危险类型
-            "type": <int>,
-			//图片的url
-            "img": "<string>"
-        	//经度
-        	"lnogitude":<double>,	
-        	//纬度	
-        	"latitude":<double>	
-		}
-	],
-	"code": <int>,	//数据总数
-	"msg": "num的危险记录"	//如：2015-03-02 18:22:22的健康数据
-}
-~~~
-
-#### 生成健康报表
-
-###### excel文件下载链接
-
-将时间在num1和num2之间的车次导出为一张excel表格，表格下每一张表的表示一次车次的记录，每一张表分为两部分，上面是健康数据异常次数的统计，下方是该车次所有健康记录，有异常数据的单元格会用黄色标记
-
-**请求url：**
-
-- `api/excel/export/{id}/{num1}/{num2}`
+- `api/health/sendAlco/{alco}/{id}`
 
 **请求方式**
 
@@ -852,59 +725,8 @@ get
 **参数**
 
 ~~~json
+"mes":<double> //需要传的信息
 "id":"<string>"
-"num1":"<string>"	//时间，起始时间
-"num2":"<string>"	//时间，截止时间
-~~~
-
-**返回值**
-
-~~~json
-//游览器打开链接直接下载文件
-~~~
-
-#### 一些连接相关
-
-###### 算法方面获取用户端的相应id
-
-**请求url:**
-
-- `api/userInfo/getId`
-
-**请求方式**
-
-get
-
-**参数**
-
-~~~json
-//暂时无
-~~~
-
-**返回值**
-
-~~~json
-{
-	"data":"<string>"//当前使用的小程序的id
-	"code": 0,
-	"msg": "登陆成功"
-}
-~~~
-
-###### 酒精参数中转——暂存
-
-**请求url：**
-
-- `api/health/sendAlco/{mes}`
-
-**请求方式**
-
-get
-
-**参数**
-
-~~~json
-"mes":"<string>" //需要传的信息
 ~~~
 
 **返回值**
@@ -935,3 +757,204 @@ get
 "<string>"	//暂存的信息
 ~~~
 
+#### 生成健康报表
+
+###### excel文件下载链接
+
+将时间在num1和num2之间的车次导出为一张excel表格，表格下每一张表的表示一次车次的记录，每一张表分为两部分，上面是健康数据异常次数的统计，下方是该车次所有健康记录，有异常数据的单元格会用黄色标记
+
+**请求url：**
+
+- `api/excel/export/{id}/{num1}/{num2}`
+
+**请求方式**
+
+get
+
+**参数**
+
+~~~json
+"id":"<string>"
+"num1":"<string>"	//时间，起始时间
+"num2":"<string>"	//时间，截止时间
+~~~
+
+**返回值**
+
+~~~json
+//游览器打开链接直接下载文件
+~~~
+
+#### 危险行为查询
+
+###### 查询指定时间段所有车次的危险记录
+
+上文提到的查询api将相关的批次列出来后，如果用户点击相应的批次，在调用这个api可以将具体的数据返回小程序
+
+**请求url：**
+
+- `api/danger/search/{id}/{num1}/{num2}`
+
+**请求方式**
+
+get
+
+**参数**
+
+~~~js
+id:"<string>"
+num1:"<string>"//num1为最早时间
+num1:"<string>"//num2为最晚时间
+~~~
+
+**返回值**
+
+~~~js
+{
+	"res_pic": {
+		"data": [
+			{
+				"num": "2016-03-02 18:22:22"
+			},
+            ...
+            {
+				"num": "2016-03-02 18:22:22"
+			}
+		],
+		"code": <int>,	//个数
+		"msg": "该时间段所有危险驾驶行为"
+	},
+	"res_alco": {
+		"data": [
+			{
+				"num": "2016-03-02 18:22:22"
+			},
+            ...
+            {
+				"num": "2016-03-02 18:22:22"
+			}
+		],
+		"code": <int>,	//个数
+		"msg": "该时间段所有酒精超标记录"
+	}
+}
+~~~
+
+###### 查询有车次的危险记录
+
+上文提到的查询api将相关的批次列出来后，如果用户点击相应的批次，在调用这个api可以将具体的数据返回小程序
+
+**请求url：**
+
+- `api/danger/searchAll/{id}/{num1}/{num2}`
+
+**请求方式**
+
+get
+
+**参数**
+
+~~~js
+id:"<string>"
+num1:"<string>"//num1为最早时间
+num1:"<string>"//num2为最晚时间
+~~~
+
+**返回值**
+
+~~~js
+{
+	"res_pic": {
+		"data": [
+			{
+				"num": "2016-03-02 18:22:22"
+			},
+            ...
+            {
+				"num": "2016-03-02 18:22:22"
+			}
+		],
+		"code": <int>,	//个数
+		"msg": "该时间段所有危险驾驶行为"
+	},
+	"res_alco": {
+		"data": [
+			{
+				"num": "2016-03-02 18:22:22"
+			},
+            ...
+            {
+				"num": "2016-03-02 18:22:22"
+			}
+		],
+		"code": <int>,	//个数
+		"msg": "该时间段所有酒精超标记录"
+	}
+}
+~~~
+
+###### 查询单次所有的危险记录
+
+**请求url：**
+
+- `api/danger/list/{id}/{num}`
+
+**请求方式**
+
+get
+
+**参数**
+
+~~~js
+id:"<string>"
+num:"<string>"//批次
+~~~
+
+**返回值**
+
+~~~js
+{
+	"res_pic": {
+		"data": [
+			{
+				"num": "<string>",	//批次
+				"time": "<string>",	//时间
+				"type": <int>,			//违规类型	 1：抽烟 2：喝东西 3：打电话 4.疲劳驾驶
+				"img": "<string>",	//url	
+				"longitude": <double>,	//经度
+				"latitude": <double>	//纬度
+			},
+            ...
+			{
+				"num": "<string>",	//批次
+				"time": "<string>",	//时间
+				"type": <int>,			//违规类型	 1：抽烟 2：喝东西 3：打电话 4.疲劳驾驶
+				"img": "<string>",	//url	
+				"longitude": <double>,	//经度
+				"latitude": <double>	//纬度
+			},
+		],
+		"code": <int>,		//组数
+		"msg": "{num}危险驾驶行为记录"		//如：2015-03-02 18:22:22危险驾驶行为记录
+	},
+	"res_alco": {
+		"data": [
+			{
+				"num": "2016-03-02 18:22:22",	//批次
+				"time": "2022-04-15T02:25:30",	//时间
+				"alcohol": 12.3					//酒精含量
+			},
+			...
+			{
+				"num": "2016-03-02 18:22:22",	//批次
+				"time": "2022-04-15T02:25:30",	//时间
+				"alcohol": 12.3					//酒精含量
+			}
+		],
+		"code": <int>,		//组数
+		"msg": "{num}的酒精超标记录"	//如：2015-03-02 18:22:22的酒精超标记录
+	}
+}
+~~~
+
+###### 
