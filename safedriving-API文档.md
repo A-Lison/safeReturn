@@ -165,7 +165,7 @@ id：用户的唯一区分（计划用小程序可以直接获取的openid）
     //名字
     "name":"<string>",
     //年龄
-    "age":<int>,
+    "age":"<string>",
     //性别
     "sex":<int>,
     //电话

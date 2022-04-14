@@ -120,22 +120,8 @@ public class userinfoController {
 
     // 查询用户
     @PostMapping("/search")
-    public result searchF(@RequestBody String id) {
-        String sql = "select * from userinfo where id = '" + id + "';";
-        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
-        result res = new result();
-        if (list.size() != 0) {
-            Map<String, Object> map = list.get(0);
-            System.out.println("查询用户成功");
-            res.code = 0;
-            res.msg = "查询成功";
-            res.data = map;
-        } else {
-            System.out.println("查询用户失败");
-            res.code = -1;
-            res.msg = "未查询到该用户";
-            res.data = null;
-        }
+    public result searchF(@RequestBody Person per) {
+        result res = search(per.openid);
         return res;
     }
 
@@ -144,9 +130,10 @@ public class userinfoController {
     public result login(
             @RequestBody Person per) {
         String num = per.num;
+        System.out.println(per);
         // 判断是否为已注册用户
         this.id = new String(id);
-        result userinfo = search(per.id);
+        result userinfo = search(per.openid);
         if (userinfo.data != null) {
             System.out.println("用户存在");
             userinfo.msg = "登陆成功";
@@ -168,7 +155,7 @@ public class userinfoController {
                 + age + ","
                 + sex + ",'"
                 + num + "','"
-                + per.id + "');";
+                + per.openid + "');";
         System.out.println(sql);
         jdbcTemplate.update(sql);
         System.out.println("添加新用户信息");
@@ -187,7 +174,7 @@ public class userinfoController {
         jdbcTemplate.update(sql);
         System.out.println("创建用户健康表");
 
-        userinfo = search(per.id);
+        userinfo = search(per.openid);
         userinfo.msg = "用户创建成功";
         userinfo.code = 1;
         return userinfo;
@@ -211,7 +198,7 @@ public class userinfoController {
     @PostMapping(path = "/update")
     public boolean updateuserinfo(@RequestBody UserInfo userinfo) {
         System.out.println("更新用户信息");
-        String sql = "update userinfo set name ='" + userinfo.name + "',age=" + userinfo.age + ",sex=" + userinfo.sex
+        String sql = "update userinfo set name ='" + userinfo.name + "',age='" + userinfo.age + "',sex=" + userinfo.sex
                 + ",phone='" + userinfo.phone + "' where id='" + userinfo.id + "';";
         jdbcTemplate.update(sql);
         return true;
