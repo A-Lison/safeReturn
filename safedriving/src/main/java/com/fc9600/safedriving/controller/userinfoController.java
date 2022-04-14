@@ -162,7 +162,7 @@ public class userinfoController {
         String RId = realId.get(0).get("count(*)").toString();
         System.out.println(RId);
         String name = "新用户" + RId;
-        String id = sql = "insert into userinfo(id,name,age,sex,phone,openid)values ('"
+        sql = "insert into userinfo(id,name,age,sex,phone,openid)values ('"
                 + RId + "','"
                 + name + "',"
                 + age + ","
