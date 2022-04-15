@@ -33,8 +33,8 @@ class excelController {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    SimpleDateFormat sheetNamedf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat sheetNamedf = new SimpleDateFormat("yyyy-MM-dd");
     HSSFWorkbook workbook;
 
     public void createSheet(
@@ -155,7 +155,7 @@ class excelController {
         String formName = "health" + id;
         String fileName = id + "'s health report.xls";
         String sql = "select num from (SELECT * FROM " + formName + " WHERE num BETWEEN '" + start +
-                ".000' AND '" + end + ".999')A group by num;";
+                " 00:00:00.000' AND '" + end + " 23:59:59.999')A group by num;";
         List<Map<String, Object>> total = jdbcTemplate.queryForList(sql);
         this.workbook = new HSSFWorkbook();
         // 建立escel中的每一个sheet

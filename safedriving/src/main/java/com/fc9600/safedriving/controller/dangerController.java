@@ -23,8 +23,8 @@ public class dangerController {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    SimpleDateFormat sheetNamedf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat sheetNamedf = new SimpleDateFormat("yyyy-MM-dd");
 
     // 查询单车次的健康数据
     @GetMapping("list/{id}/{num}")
@@ -55,14 +55,14 @@ public class dangerController {
             @PathVariable("id") String id) {
         Danger danger = new Danger();
         String formName = "driver" + id;
-        String sql = "select num from " + formName + " group by num having num !='new';";
+        String sql = "select num from " + formName + " group by num;";
         List<Map<String, Object>> list1 = jdbcTemplate.queryForList(sql);
         danger.res_pic = new result();
         danger.res_pic.code = list1.size();
         danger.res_pic.data = list1;
         danger.res_pic.msg = "有危险驾驶行为的车次";
         formName = "alcohol" + id;
-        sql = "select num from " + formName + " group by num having num !='new';";
+        sql = "select num from " + formName + " group by num;";
         List<Map<String, Object>> list2 = jdbcTemplate.queryForList(sql);
         danger.res_alco = new result();
         danger.res_alco.code = list2.size();
@@ -85,8 +85,10 @@ public class dangerController {
         String end = sheetNamedf.format(date);
         String formName = "driver" + id;
         String sql = "select num from (SELECT * FROM " + formName + " WHERE num BETWEEN '" + start +
-                ".000' AND '" + end + ".999')A group by num;";
+                " 00:00:00.000' AND '" + end + " 23:59:59.999')A group by num;";
         List<Map<String, Object>> list1 = jdbcTemplate.queryForList(sql);
+        System.out.println(sql);
+        System.out.println(list1);
         danger.res_pic.data = list1;
         danger.res_pic.code = list1.size();
         danger.res_pic.msg = "该时间段所有危险驾驶行为";
@@ -94,6 +96,8 @@ public class dangerController {
         sql = "select num from (SELECT * FROM " + formName + " WHERE num BETWEEN '" + start +
                 ".000' AND '" + end + ".999')A group by num;";
         List<Map<String, Object>> list2 = jdbcTemplate.queryForList(sql);
+        System.out.println(list2);
+
         danger.res_alco.data = list2;
         danger.res_alco.code = list2.size();
         danger.res_alco.msg = "该时间段所有酒精超标记录";

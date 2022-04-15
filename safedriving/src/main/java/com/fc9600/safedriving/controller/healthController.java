@@ -25,8 +25,8 @@ public class healthController {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    SimpleDateFormat sheetNamedf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat sheetNamedf = new SimpleDateFormat("yyyy-MM-dd");
 
     // 传输数据
     // insert into formName( ) values('2017-03-02 15:22:22');
@@ -193,7 +193,7 @@ public class healthController {
         String end = sheetNamedf.format(date);
         String formName = "health" + id;
         String sql = "select num from (SELECT * FROM " + formName + " WHERE num BETWEEN '" + start +
-                ".000' AND '" + end + ".999')A group by num;";
+                " 00:00:00.000' AND '" + end + " 23:59:59.999')A group by num;";
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
         res.data = list;
         res.code = list.size();

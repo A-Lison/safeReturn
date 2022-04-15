@@ -716,7 +716,7 @@ true
 
 **请求url：**
 
-- `api/health/sendAlco/{alco}/{id}`
+- `api/alco/sendAlco/{alco}/{id}`
 
 **请求方式**
 
@@ -739,7 +739,7 @@ true
 
 **请求url：**
 
-- `api/health/getAlco`
+- `api/alco/getAlco`
 
 **请求方式**
 
