@@ -169,7 +169,7 @@ public class userinfoController {
             System.out.println("创建用户驾驶图表");
             // 创建该用户的health表（批次，时间，心率，血压，体温。。。）
             sql = "create table health" + RId
-                    + "(num varchar(32),time datetime,heart int,press double,heat double,longitude decimal(20,10),latitude decimal(20,10));";
+                    + "(num varchar(32),time datetime,heart int,Dpress double,Spress double,heat double,longitude decimal(20,10),latitude decimal(20,10));";
             jdbcTemplate.update(sql);
             System.out.println("创建用户健康表");
             // 创建酒精表

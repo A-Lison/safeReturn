@@ -66,7 +66,7 @@ class excelController {
         Hstyle.setAlignment(HorizontalAlignment.CENTER);
 
         int rowNum = 5;
-        String[] headers = { "时间", "心跳", "血压", "体温" };
+        String[] headers = { "时间", "心跳", "舒张压", "收缩压", "体温" };
         HSSFRow row = sheet.createRow(4);
         for (int i = 0; i < headers.length; i++) {
             HSSFCell cell = row.createCell(i);
@@ -74,25 +74,27 @@ class excelController {
             cell.setCellValue(text);
             cell.setCellStyle(style);
         }
-        int cnt[] = { 0, 0, 0 };
+        int cnt[] = { 0, 0, 0, 0 };
         int size = list.size();
         for (int i = 0; i < size; i++) {
 
             HSSFRow row1 = sheet.createRow(rowNum);
 
             int heart = Integer.parseInt(list.get(i).get("heart") + "");
-            double press = Double.parseDouble(list.get(i).get("press") + "");
+            double Dpress = Double.parseDouble(list.get(i).get("Dpress") + "");
+            double Spress = Double.parseDouble(list.get(i).get("Spress") + "");
             double heat = Double.parseDouble(list.get(i).get("heat") + "");
             row1.createCell(0).setCellValue(list.get(i).get("time") + "");
             row1.createCell(1).setCellValue(heart + "");
-            row1.createCell(2).setCellValue(press + "");
-            row1.createCell(3).setCellValue(heat + "");
+            row1.createCell(2).setCellValue(Dpress + "");
+            row1.createCell(3).setCellValue(Spress + "");
+            row1.createCell(4).setCellValue(heat + "");
             if (rowNum % 2 == 0) {
-                for (int j = 0; j < 4; j++) {
+                for (int j = 0; j < 5; j++) {
                     row1.getCell(j).setCellStyle(style1);
                 }
             } else {
-                for (int j = 0; j < 4; j++) {
+                for (int j = 0; j < 5; j++) {
                     row1.getCell(j).setCellStyle(style2);
                 }
             }
@@ -100,13 +102,17 @@ class excelController {
                 cnt[0]++;
                 row1.getCell(1).setCellStyle(Hstyle);
             }
-            if (press < 90 || press > 140) {
+            if (Dpress < 90 || Dpress > 140) {
                 cnt[1]++;
                 row1.getCell(2).setCellStyle(Hstyle);
             }
-            if (heat < 36 || heat > 37) {
+            if (Spress < 60 || Spress > 90) {
                 cnt[2]++;
                 row1.getCell(3).setCellStyle(Hstyle);
+            }
+            if (heat < 36 || heat > 37) {
+                cnt[3]++;
+                row1.getCell(4).setCellStyle(Hstyle);
             }
             rowNum++;
 

@@ -37,10 +37,11 @@ public class healthController {
             String formName = "health" + healthinfo.id;
             System.out.println(formName);
             String sql = "insert into " + formName +
-                    "(num,time,heart,press,heat,longitude,latitude)values ('new','"
+                    "(num,time,heart,Dpress,Spress,heat,longitude,latitude)values ('new','"
                     + healthinfo.data.get(i).time + "',"
                     + healthinfo.data.get(i).heart + ","
-                    + healthinfo.data.get(i).press + ","
+                    + healthinfo.data.get(i).Dpress + ","
+                    + healthinfo.data.get(i).Spress + ","
                     + healthinfo.data.get(i).heat + ","
                     + healthinfo.data.get(i).longitude + ","
                     + healthinfo.data.get(i).latitude
