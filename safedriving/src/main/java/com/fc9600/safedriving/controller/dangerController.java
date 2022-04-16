@@ -28,57 +28,41 @@ public class dangerController {
 
     // 查询单车次的健康数据
     @GetMapping("list/{id}/{num}")
-    public Danger returnDate(
+    public result returnDate(
             @PathVariable("id") String id,
             @PathVariable("num") String num) {
-        Danger danger = new Danger();
-        danger.res_pic = new result();
+        result res = new result();
+        res.data = new Object();
         String sql = "select * from driver" + id + " where num = '" + num + "';";
         List<Map<String, Object>> list1 = jdbcTemplate.queryForList(sql);
-        danger.res_pic.code = list1.size();
-        danger.res_pic.data = list1;
-        danger.res_pic.msg = num + "危险驾驶行为记录";
-
-        danger.res_alco = new result();
-        sql = "select * from alcohol" + id + " where num = '" + num + "';";
-        List<Map<String, Object>> list2 = jdbcTemplate.queryForList(sql);
-        danger.res_alco.code = list2.size();
-        danger.res_alco.data = list2;
-        danger.res_alco.msg = num + "的酒精超标记录";
-
-        return danger;
+        res.code = list1.size();
+        res.data = list1;
+        res.msg = num + "危险驾驶行为记录";
+        return res;
     }
 
     // 查询所有车次
     @GetMapping("/searchAll/{id}")
-    public Danger searchAll(
+    public result searchAll(
             @PathVariable("id") String id) {
-        Danger danger = new Danger();
+        result res = new result();
         String formName = "driver" + id;
-        String sql = "select num from " + formName + " group by num;";
+        String sql = "select num from " + formName + " group by num having num != 'new';";
         List<Map<String, Object>> list1 = jdbcTemplate.queryForList(sql);
-        danger.res_pic = new result();
-        danger.res_pic.code = list1.size();
-        danger.res_pic.data = list1;
-        danger.res_pic.msg = "有危险驾驶行为的车次";
-        formName = "alcohol" + id;
-        sql = "select num from " + formName + " group by num;";
-        List<Map<String, Object>> list2 = jdbcTemplate.queryForList(sql);
-        danger.res_alco = new result();
-        danger.res_alco.code = list2.size();
-        danger.res_alco.data = list2;
-        danger.res_alco.msg = "有疑似酒驾行为的车次";
-        return danger;
+        res.data = new result();
+        res.code = list1.size();
+        res.data = list1;
+        res.msg = "有危险驾驶行为的车次";
+        return res;
     }
 
     // 查询指定时间段的所有车次
     @GetMapping("/search/{id}/{num1}/{num2}")
-    public Danger excel(@PathVariable("id") String id,
+    public result excel(@PathVariable("id") String id,
             @PathVariable("num1") String num1,
             @PathVariable("num2") String num2) throws ParseException {
-        Danger danger = new Danger();
-        danger.res_alco = new result();
-        danger.res_pic = new result();
+        result res = new result();
+        res.data = new Object();
         Date date = df.parse(num1);
         String start = sheetNamedf.format(date);
         date = df.parse(num2);
@@ -86,21 +70,12 @@ public class dangerController {
         String formName = "driver" + id;
         String sql = "select num from (SELECT * FROM " + formName + " WHERE num BETWEEN '" + start +
                 " 00:00:00.000' AND '" + end + " 23:59:59.999')A group by num;";
-        List<Map<String, Object>> list1 = jdbcTemplate.queryForList(sql);
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
         System.out.println(sql);
-        System.out.println(list1);
-        danger.res_pic.data = list1;
-        danger.res_pic.code = list1.size();
-        danger.res_pic.msg = "该时间段所有危险驾驶行为";
-        formName = "driver" + id;
-        sql = "select num from (SELECT * FROM " + formName + " WHERE num BETWEEN '" + start +
-                ".000' AND '" + end + ".999')A group by num;";
-        List<Map<String, Object>> list2 = jdbcTemplate.queryForList(sql);
-        System.out.println(list2);
-
-        danger.res_alco.data = list2;
-        danger.res_alco.code = list2.size();
-        danger.res_alco.msg = "该时间段所有酒精超标记录";
-        return danger;
+        System.out.println(list);
+        res.data = list;
+        res.code = list.size();
+        res.msg = "该时间段所有危险行为";
+        return res;
     }
 }

@@ -2,6 +2,8 @@ package com.fc9600.safedriving.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,8 +28,13 @@ public class alcoholController {
         Date en = new Date();
         String date = df.format(en);
         System.out.println(en);
-        String sql = "insert into alcohol" + id
-                + "(num,time,alcohol)values('new','" + date + "'," + alco + ");";
+        String sql = "select * from health" + id + " ORDER BY time DESC LIMIT 1;";
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
+        Object longitude = list.get(0).get("longitude");
+        Object latitude = list.get(0).get("latitude");
+        sql = "insert into driver" + id +
+                "(num,time,type,img_or_alco,longitude,latitude)values('new','"
+                + date + "','5',null," + longitude + "," + latitude + ");";
         System.out.println(sql);
         jdbcTemplate.update(sql);
         return true;

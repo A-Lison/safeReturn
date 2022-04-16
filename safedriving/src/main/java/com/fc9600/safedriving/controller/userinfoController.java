@@ -164,7 +164,7 @@ public class userinfoController {
             System.out.println("创建用户亲属表");
             // 创建该用户的driver表（批次，时间，违规类型，图片地址）
             sql = "create table driver" + RId
-                    + "(num varchar(32),time datetime,type int,img varchar(225),longitude decimal(20,10),latitude decimal(20,10));";
+                    + "(num varchar(32),time datetime,type int,img_or_alco varchar(225),longitude decimal(20,10),latitude decimal(20,10));";
             jdbcTemplate.update(sql);
             System.out.println("创建用户驾驶图表");
             // 创建该用户的health表（批次，时间，心率，血压，体温。。。）
@@ -173,10 +173,10 @@ public class userinfoController {
             jdbcTemplate.update(sql);
             System.out.println("创建用户健康表");
             // 创建酒精表
-            sql = "create table alcohol" + RId
-                    + "(num varchar(32),time datetime,alcohol decimal(10,5));";
-            jdbcTemplate.update(sql);
-            System.out.println("创建用户酒精值表");
+            // sql = "create table alcohol" + RId
+            // + "(num varchar(32),time datetime,alcohol decimal(10,5),type int);";
+            // jdbcTemplate.update(sql);
+            // System.out.println("创建用户酒精值表");
 
             userinfo = search(per.openid);
             userinfo.msg = "用户创建成功";
@@ -211,9 +211,8 @@ public class userinfoController {
 
     // 返回当前最后登录用户的id
     @GetMapping(path = "/getId")
-    public result getId() {
-        result res = new result();
-        res.data = this.id;
-        return res;
+    public String getId() {
+        String id = this.id;
+        return id;
     }
 }

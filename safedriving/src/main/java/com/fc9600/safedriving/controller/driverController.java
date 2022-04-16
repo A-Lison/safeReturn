@@ -87,7 +87,7 @@ public class driverController {
         Object latitude = list.get(0).get("latitude");
         // System.out.println(longitude.getClass());
         sql = "insert into " + formName +
-                "(num,time,type,img,longitude,latitude)values('new','"
+                "(num,time,type,img_or_alco,longitude,latitude)values('new','"
                 + time + "'," + type + ",'" + img + "'," + longitude + "," + latitude + ");";
         jdbcTemplate.update(sql);
         return true;

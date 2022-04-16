@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.fc9600.safedriving.model.HealthInfoGet;
 import com.fc9600.safedriving.model.HealthInfoPost;
 import com.fc9600.safedriving.model.healthSearch;
 import com.fc9600.safedriving.model.result;
@@ -33,37 +34,48 @@ public class healthController {
     @PostMapping(path = "/healthAdd")
     public result addhealthinfo(@RequestBody HealthInfoPost healthinfo) {
         result res = new result();
-        for (int i = 0; i < healthinfo.data.size(); i++) {
-            String formName = "health" + healthinfo.id;
-            System.out.println(formName);
-            String sql = "insert into " + formName +
-                    "(num,time,heart,Dpress,Spress,heat,longitude,latitude)values ('new','"
-                    + healthinfo.data.get(i).time + "',"
-                    + healthinfo.data.get(i).heart + ","
-                    + healthinfo.data.get(i).Dpress + ","
-                    + healthinfo.data.get(i).Spress + ","
-                    + healthinfo.data.get(i).heat + ","
-                    + healthinfo.data.get(i).longitude + ","
-                    + healthinfo.data.get(i).latitude
-                    + ");";
-            jdbcTemplate.update(sql);
-        }
+        // for (int i = 0; i < healthinfo.data.size(); i++) {
+        String formName = "health" + healthinfo.id;
+        System.out.println(formName);
+        String sql = "insert into " + formName +
+                "(num,time,heart,Dpress,Spress,heat,longitude,latitude)values ('new','"
+                + healthinfo.data.time + "',"
+                + healthinfo.data.heart + ","
+                + healthinfo.data.Dpress + ","
+                + healthinfo.data.Spress + ","
+                + healthinfo.data.heat + ","
+                + healthinfo.data.longitude + ","
+                + healthinfo.data.latitude
+                + ");";
+        // String sql = "insert into " + formName +
+        // "(num,time,heart,Dpress,Spress,heat,longitude,latitude)values ('new','"
+        // + healthinfo.data.get(i).time + "',"
+        // + healthinfo.data.get(i).heart + ","
+        // + healthinfo.data.get(i).Dpress + ","
+        // + healthinfo.data.get(i).Spress + ","
+        // + healthinfo.data.get(i).heat + ","
+        // + healthinfo.data.get(i).longitude + ","
+        // + healthinfo.data.get(i).latitude
+        // + ");";
+        jdbcTemplate.update(sql);
+        // }
         if (healthinfo.sign == 1) {
             res.msg = "运行中";
             res.code = 1;
         } else {
             // 用于传输最后一段数据
-            String formName = "health" + healthinfo.id;
-            String en = healthinfo.data.get(healthinfo.data.size() - 1).time;
+            formName = "health" + healthinfo.id;
+            // String en = healthinfo.data.get(healthinfo.data.size() - 1).time;
+            String en = healthinfo.data.time;
             // String end = en.substring(0, en.length() - 9);
-            String sql = "update " + formName + " set num='" + en + "' where num='new';";
+            sql = "update " + formName + " set num='" + en + "' where num='new';";
             jdbcTemplate.update(sql);
             formName = "driver" + healthinfo.id;
             sql = "update " + formName + " set num='" + en + "' where num='new';";
             jdbcTemplate.update(sql);
-            formName = "alcohol" + healthinfo.id;
-            sql = "update " + formName + " set num='" + en + "' where num='new';";
-            jdbcTemplate.update(sql);
+            // formName = "alcohol" + healthinfo.id;
+            // sql = "update " + formName + " set num='" + en + "' where num='new';";
+            // jdbcTemplate.update(sql);
             res.msg = "数据传输结束";
             res.code = 0;
         }
@@ -194,7 +206,7 @@ public class healthController {
         String end = sheetNamedf.format(date);
         String formName = "health" + id;
         String sql = "select num from (SELECT * FROM " + formName + " WHERE num BETWEEN '" + start +
-                " 00:00:00.000' AND '" + end + " 23:59:59.999')A group by num;";
+                " 00:00:00.000' AND '" + end + " 23:59:59.999')A group by num having num !='new';";
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
         res.data = list;
         res.code = list.size();

@@ -161,7 +161,7 @@ class excelController {
         String formName = "health" + id;
         String fileName = id + "'s health report.xls";
         String sql = "select num from (SELECT * FROM " + formName + " WHERE num BETWEEN '" + start +
-                " 00:00:00.000' AND '" + end + " 23:59:59.999')A group by num;";
+                " 00:00:00.000' AND '" + end + " 23:59:59.999')A group by num having num!='new';";
         List<Map<String, Object>> total = jdbcTemplate.queryForList(sql);
         this.workbook = new HSSFWorkbook();
         // 建立escel中的每一个sheet

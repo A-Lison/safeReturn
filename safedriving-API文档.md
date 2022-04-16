@@ -1,16 +1,13 @@
 #### 一些说明
 
 1. API的notion在线文档：https://www.notion.so/fc9600-safedriving-API-e4842ad3e06f4fa7a2e24ff7a42f7c3c
-
 2. API:https://www.xqstudy.top
-
-3. id：用户的唯一区分（计划用小程序可以直接获取的openid）
-
-4. 时间格式：“YYYY-MM-DD HH:MM:SS”             例如：“2017-03-02 15:22:22”
-
-5. 除了上传图片的接口使用的是form-data格式上传，其余都为json格式
-
-6. 因为openid的字符存在非法字符，所以数据库在执行相关信息的操作的时候使用的id为userinfo表中openid对应的id
+3. 使用的api测试工具为APIpost,导出的样例文档为：https://console-docs.apipost.cn/preview/36305c3c7703922b/36050e3f128b0b10
+4. id：用户的唯一区分（计划用小程序可以直接获取的openid）
+5. 时间格式：“YYYY-MM-DD HH:MM:SS”             例如：“2017-03-02 15:22:22”
+6. 除了上传图片的接口使用的是form-data格式上传，其余都为json格式
+7. 因为openid的字符存在非法字符，所以数据库在执行相关信息的操作的时候使用的id为userinfo表中openid对应的id
+6. 算法和酒精在开始驾驶前需要调用获取当前用户的id的接口以便后续的传值给后端
 
 #### 用户信息
 
@@ -200,11 +197,7 @@ get
 **返回值**
 
 ~~~json
-{
-	"data":"<string>"//当前使用的小程序的id
-	"code": 0,
-	"msg": "登陆成功"
-}
+"id":"<string>"	//返回当前用户的id
 ~~~
 
 #### **亲属信息**
@@ -378,8 +371,10 @@ post
 	"data":[{
         //心跳
 		"heart":<int>,
-		//血压
-        "press":<double>,
+		//舒张压
+        "Dpress":<double>,
+        //收缩压
+        "Spress":<double>,
 		//体温
         "heat":<double>,
         //时间戳
@@ -616,7 +611,8 @@ num:"<string>"//num为用户点击的相应批次的num
 			"num": "<string>",	//批次
 			"time": "<string>",	//时间
 			"heart": <int>,	//心跳
-			"press": <double>,	//血压
+        	"Dpress":<double>,	//舒张压
+        	"Spress":<double>,	//收缩压
 			"heat": <double>	//体温
             "lnogitude":<double>,	//经度
         	"latitude":<double>	//纬度
@@ -626,7 +622,8 @@ num:"<string>"//num为用户点击的相应批次的num
 			"num": "<string>",	//批次
 			"time": "<string>",	//时间
 			"heart": <int>,	//心跳
-			"press": <double>,	//血压
+			"Dpress":<double>,	//舒张压
+        	"Spress":<double>,	//收缩压
 			"heat": <double>	//体温
         	"lnogitude":<double>,	//经度
         	"latitude":<double>	//纬度
@@ -846,7 +843,7 @@ num1:"<string>"//num2为最晚时间
 
 **请求url：**
 
-- `api/danger/searchAll/{id}/{num1}/{num2}`
+- `api/danger/searchAll/{id}`
 
 **请求方式**
 
@@ -856,8 +853,6 @@ get
 
 ~~~js
 id:"<string>"
-num1:"<string>"//num1为最早时间
-num1:"<string>"//num2为最晚时间
 ~~~
 
 **返回值**
@@ -940,15 +935,17 @@ num:"<string>"//批次
 	"res_alco": {
 		"data": [
 			{
-				"num": "2016-03-02 18:22:22",	//批次
-				"time": "2022-04-15T02:25:30",	//时间
-				"alcohol": 12.3					//酒精含量
+				"num": "<string>",	//批次
+				"time": "string",	//时间
+				"alcohol": <double>,	//酒精含量
+                "type":5
 			},
 			...
 			{
-				"num": "2016-03-02 18:22:22",	//批次
-				"time": "2022-04-15T02:25:30",	//时间
-				"alcohol": 12.3					//酒精含量
+				"num": "<string>",	//批次
+				"time": "string",	//时间
+				"alcohol": <double>,	//酒精含量
+                "type":5
 			}
 		],
 		"code": <int>,		//组数
@@ -957,4 +954,3 @@ num:"<string>"//批次
 }
 ~~~
 
-###### 
