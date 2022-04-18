@@ -28,17 +28,34 @@ public class dangerController {
 
     // 查询单车次的健康数据
     @GetMapping("list/{id}/{num}")
-    public result returnDate(
+    public Object returnDate(
             @PathVariable("id") String id,
             @PathVariable("num") String num) {
-        result res = new result();
-        res.data = new Object();
-        String sql = "select * from driver" + id + " where num = '" + num + "';";
-        List<Map<String, Object>> list1 = jdbcTemplate.queryForList(sql);
-        res.code = list1.size();
-        res.data = list1;
-        res.msg = num + "危险驾驶行为记录";
-        return res;
+
+        if (num.equals("new")) {
+            Danger danger = new Danger();
+            danger.res_alco = new result();
+            danger.res_pic = new result();
+            String sql = "select * from driver" + id + " where num = '" + num + "' and img_or_alco not like '%img%';";
+            List<Map<String, Object>> list1 = jdbcTemplate.queryForList(sql);
+            danger.res_alco.data = list1;
+            danger.res_alco.code = list1.size();
+            sql = "select * from driver" + id + " where num = '" + num + "' and img_or_alco like '%img%';";
+            System.out.println(sql);
+            List<Map<String, Object>> list2 = jdbcTemplate.queryForList(sql);
+            danger.res_pic.data = list2;
+            danger.res_pic.code = list2.size();
+            return danger;
+        } else {
+            result res = new result();
+            res.data = new Object();
+            String sql = "select * from driver" + id + " where num = '" + num + "';";
+            List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
+            res.code = list.size();
+            res.data = list;
+            res.msg = num + "危险驾驶行为记录";
+            return res;
+        }
     }
 
     // 查询所有车次

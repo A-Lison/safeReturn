@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.fc9600.safedriving.model.Person;
 import com.fc9600.safedriving.model.UserInfo;
-import com.fc9600.safedriving.model.result;
+import com.fc9600.safedriving.model.userinfoBasic;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,7 +23,7 @@ public class userinfoController {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    private String id = "";
+    private String wxid = "";
     // public String uId; // 小程序的openId
     // public String uName; // uid用户名 默认的为 #+uid
     // public int uAge;
@@ -99,47 +99,54 @@ public class userinfoController {
     // System.out.println("查询用户失败");
     // return null;
     // }
-    public result search(String id) {
+    public userinfoBasic search(String id) {
         String sql = "select * from userinfo where openid = '" + id + "';";
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
-        result res = new result();
+        userinfoBasic res = new userinfoBasic();
         if (list.size() != 0) {
             Map<String, Object> map = list.get(0);
             System.out.println("查询用户成功");
             res.code = 0;
             res.msg = "查询成功";
             res.data = map;
-            this.id = map.get("id").toString();
+            this.wxid = map.get("id").toString();
         } else {
             System.out.println("查询用户失败");
             res.code = -1;
             res.msg = "未查询到该用户";
             res.data = null;
         }
+        sql = "select num from driver" + this.wxid + " group by num having num != 'new';";
+        List<Map<String, Object>> list1 = jdbcTemplate.queryForList(sql);
+        res.DanNum = list1.size() + "";
+        sql = "select * from relation" + this.wxid + ";";
+        List<Map<String, Object>> list2 = jdbcTemplate.queryForList(sql);
+        res.RelNum = list2.size() + "";
+        System.out.println(res.DanNum);
         return res;
     }
 
     // 查询用户
     @PostMapping("/search")
-    public result searchF(@RequestBody Person per) {
-        result res = search(per.openid);
+    public userinfoBasic searchF(@RequestBody Person per) {
+        userinfoBasic res = search(per.openid);
         return res;
     }
 
     // 登录
     @PostMapping("/login")
-    public result login(
+    public userinfoBasic login(
             @RequestBody Person per) {
         String num = per.num;
         System.out.println(per);
         // 判断是否为已注册用户
-        result userinfo = search(per.openid);
+        userinfoBasic userinfo = search(per.openid);
         if (userinfo.data != null) {
             System.out.println("用户存在");
             userinfo.msg = "登陆成功";
         } else {
             // 插入新的用户信息
-            this.id = new String(id);
+            this.wxid = new String(per.openid);
             System.out.println("用户不存在创建新的用户");
             String age = "空";
             String sex = "空";
@@ -212,7 +219,7 @@ public class userinfoController {
     // 返回当前最后登录用户的id
     @GetMapping(path = "/getId")
     public String getId() {
-        String id = this.id;
+        String id = this.wxid;
         return id;
     }
 }

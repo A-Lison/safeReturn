@@ -34,7 +34,7 @@ public class alcoholController {
         Object latitude = list.get(0).get("latitude");
         sql = "insert into driver" + id +
                 "(num,time,type,img_or_alco,longitude,latitude)values('new','"
-                + date + "','5',null," + longitude + "," + latitude + ");";
+                + date + "','5','" + alco + "'," + longitude + "," + latitude + ");";
         System.out.println(sql);
         jdbcTemplate.update(sql);
         return true;

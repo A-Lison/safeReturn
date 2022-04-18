@@ -1,12 +1,12 @@
 package com.fc9600.safedriving.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.fc9600.safedriving.model.HealthInfoGet;
 import com.fc9600.safedriving.model.HealthInfoPost;
 import com.fc9600.safedriving.model.healthSearch;
 import com.fc9600.safedriving.model.result;
@@ -27,16 +27,17 @@ public class healthController {
     @Autowired
     JdbcTemplate jdbcTemplate;
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     SimpleDateFormat sheetNamedf = new SimpleDateFormat("yyyy-MM-dd");
 
     // 传输数据
     // insert into formName( ) values('2017-03-02 15:22:22');
     @PostMapping(path = "/healthAdd")
-    public result addhealthinfo(@RequestBody HealthInfoPost healthinfo) {
+    public result addhealthinfo(@RequestBody HealthInfoPost healthinfo) throws ParseException {
         result res = new result();
         // for (int i = 0; i < healthinfo.data.size(); i++) {
         String formName = "health" + healthinfo.id;
-        System.out.println(formName);
+        healthinfo.data.time = healthinfo.data.time.replace('/', '-');
         String sql = "insert into " + formName +
                 "(num,time,heart,Dpress,Spress,heat,longitude,latitude)values ('new','"
                 + healthinfo.data.time + "',"
@@ -67,6 +68,7 @@ public class healthController {
             formName = "health" + healthinfo.id;
             // String en = healthinfo.data.get(healthinfo.data.size() - 1).time;
             String en = healthinfo.data.time;
+            en = en.replace('/', '-');
             // String end = en.substring(0, en.length() - 9);
             sql = "update " + formName + " set num='" + en + "' where num='new';";
             jdbcTemplate.update(sql);

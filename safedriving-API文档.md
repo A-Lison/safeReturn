@@ -890,6 +890,8 @@ id:"<string>"
 
 ###### 查询单次所有的危险记录
 
+查询的是历史信息参数为对应历史记录里面的批次，如果要查询正在驾驶过程中的违规信息则将num参数写为new即可
+
 **请求url：**
 
 - `api/danger/list/{id}/{num}`
@@ -907,6 +909,8 @@ num:"<string>"//批次
 
 **返回值**
 
+（正在驾驶产生的记录）
+
 ~~~js
 {
 	"res_pic": {
@@ -915,7 +919,7 @@ num:"<string>"//批次
 				"num": "<string>",	//批次
 				"time": "<string>",	//时间
 				"type": <int>,			//违规类型	 1：抽烟 2：喝东西 3：打电话 4.疲劳驾驶
-				"img": "<string>",	//url	
+				"img_or_alco": "<string>",	//url	
 				"longitude": <double>,	//经度
 				"latitude": <double>	//纬度
 			},
@@ -924,7 +928,7 @@ num:"<string>"//批次
 				"num": "<string>",	//批次
 				"time": "<string>",	//时间
 				"type": <int>,			//违规类型	 1：抽烟 2：喝东西 3：打电话 4.疲劳驾驶
-				"img": "<string>",	//url	
+				"img_or_alco": "<string>",	//url	
 				"longitude": <double>,	//经度
 				"latitude": <double>	//纬度
 			},
@@ -937,20 +941,52 @@ num:"<string>"//批次
 			{
 				"num": "<string>",	//批次
 				"time": "string",	//时间
-				"alcohol": <double>,	//酒精含量
-                "type":5
+				"img_or_alco": "<string>",	//酒精记录
+                "type":5,
+                "longitude": <double>,	//经度
+				"latitude": <double>	//纬度
 			},
 			...
 			{
 				"num": "<string>",	//批次
 				"time": "string",	//时间
-				"alcohol": <double>,	//酒精含量
-                "type":5
+				"img_or_alco": "<string>",	//酒精记录
+                "type":5,
+                "longitude": <double>,	//经度
+				"latitude": <double>	//纬度
 			}
 		],
-		"code": <int>,		//组数
-		"msg": "{num}的酒精超标记录"	//如：2015-03-02 18:22:22的酒精超标记录
+		"code": <int>,		
+		"msg": "num的历史记录"
 	}
+}
+~~~
+
+历史记录查询
+
+~~~json
+{
+	"data": [
+		{
+			"num": "<string>",	//批次
+			"time": "string",	//时间
+			"img_or_alco": "<string>",	//酒精记录或者照片路径
+            "type":5,
+            "longitude": <double>,	//经度
+			"latitude": <double>	//纬度
+		},
+		...
+		{
+			"num": "<string>",	//批次
+			"time": "string",	//时间
+			"img_or_alco": "<string>",	//酒精记录或者照片路径
+            "type":5,
+            "longitude": <double>,	//经度
+			"latitude": <double>	//纬度
+		}
+	],
+	"code": <int>,		//组数
+	"msg": "{num}的危险记录"	//如：2015-03-02 18:22:22的危险记录
 }
 ~~~
 

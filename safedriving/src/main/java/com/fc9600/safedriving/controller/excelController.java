@@ -34,14 +34,14 @@ class excelController {
     JdbcTemplate jdbcTemplate;
 
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-    SimpleDateFormat sheetNamedf = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat sheetNamedf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     HSSFWorkbook workbook;
 
     public void createSheet(
             List<Map<String, Object>> list,
             String num, String id) throws IOException, ParseException {
-        Date date = df.parse(num);
-        String time = sheetNamedf.format(date);
+        num = num.replace('/', '-');
+        String time = num.replace(':', '-');
         HSSFSheet sheet = workbook.createSheet(time);
         sheet.setColumnWidth(0, 20 * 256);
 
@@ -142,7 +142,7 @@ class excelController {
         // int cntAct[] = { 0, 0, 0, 0 };
         // row.createCell(size + 2);
         // 合并第三行
-        CellRangeAddress region = new CellRangeAddress(2, 3, 0, 3);
+        CellRangeAddress region = new CellRangeAddress(2, 3, 0, 4);
         sheet.addMergedRegion(region);
         // t = sheet.createRow(3).createCell(0);
         // t.setCellValue("详细统计列表");
@@ -164,7 +164,7 @@ class excelController {
                 " 00:00:00.000' AND '" + end + " 23:59:59.999')A group by num having num!='new';";
         List<Map<String, Object>> total = jdbcTemplate.queryForList(sql);
         this.workbook = new HSSFWorkbook();
-        // 建立escel中的每一个sheet
+        // 建立excel中的每一个sheet
         for (int i = 0; i < total.size(); i++) {
             String newN = (String) total.get(i).get("num");
             sql = "select * from " + formName + " where num = '" + newN + "';";
